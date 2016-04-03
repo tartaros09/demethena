@@ -26,9 +26,14 @@ public class CTPRAttributeRow extends JPanel
 	private JRadioButton rating4;
 	private JRadioButton rating5;
 	
-	private int rating;
+	private double rating = 0;
 	
-	private ActionListener calculateRating;
+	public ActionListener updateRating = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			rating = Double.parseDouble(e.getActionCommand());
+		}
+	};
 	
 	/******************************  ******************************/
 	
@@ -52,22 +57,27 @@ public class CTPRAttributeRow extends JPanel
 				 // Set radio buttons
 				 rating1 = new JRadioButton("1");
 				 rating1.setActionCommand("1");
+				 rating1.addActionListener(updateRating);
 				 radioPanel.add(rating1);
 				 
 				 rating2 = new JRadioButton("2");
 				 rating2.setActionCommand("2");
+				 rating2.addActionListener(updateRating);
 				 radioPanel.add(rating2);
 
 				 rating3 = new JRadioButton("3");
 				 rating3.setActionCommand("3");
+				 rating3.addActionListener(updateRating);
 				 radioPanel.add(rating3);
 				 
 				 rating4 = new JRadioButton("4");
 				 rating4.setActionCommand("4");
+				 rating4.addActionListener(updateRating);
 				 radioPanel.add(rating4);
 				 
 				 rating5 = new JRadioButton("5");
 				 rating5.setActionCommand("5");
+				 rating5.addActionListener(updateRating);
 				 radioPanel.add(rating5);
 			 }
 			 this.add(radioPanel);
@@ -78,33 +88,7 @@ public class CTPRAttributeRow extends JPanel
 			 group.add(rating3);
 			 group.add(rating4);
 			 group.add(rating5);
-			 
-			 calculateRating = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					rating = Integer.getInteger(e.getActionCommand());
-				}
-			};
-			
-			rating1.addActionListener(calculateRating);
-			rating2.addActionListener(calculateRating);
-			rating3.addActionListener(calculateRating);
-			rating4.addActionListener(calculateRating);
-			rating5.addActionListener(calculateRating);
 		 }
-	}
-	
-	/******************************  ******************************/
-	
-	/**
-	 * @description add custom external action listener to each button.
-	 */
-	public void addActionListener(ActionListener al) {
-		rating1.addActionListener(al);
-		rating2.addActionListener(al);
-		rating3.addActionListener(al);
-		rating4.addActionListener(al);
-		rating5.addActionListener(al);
 	}
 	
 	/******************************  ******************************/
@@ -112,5 +96,12 @@ public class CTPRAttributeRow extends JPanel
 	/**
 	 * @description getters
 	 */
-	public int getScore() { return this.rating; }
+	public double getRating() { return this.rating; }
+	
+	/******************************  ******************************/
+	
+	/**
+	 * @description setters
+	 */
+	public void setRating(double d) { this.rating = d; }
 }

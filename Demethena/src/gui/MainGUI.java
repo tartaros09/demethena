@@ -1,8 +1,11 @@
 package gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,9 +28,40 @@ public class MainGUI
 	private JTextField originalityScoreDisplayField;
 	private JTextField reachScoreDisplayField;
 	private JTextField engagementScoreDisplayField;
-	
 	private JTextField globalScoreDisplayField;
-		
+	
+	private JButton calculateButton;
+	
+	// Style rows
+	private CTPRAttributeRow structureRow;
+	private CTPRAttributeRow writingFlowRow;
+	private CTPRAttributeRow languageRow;
+	
+	//Content rows
+	private CTPRAttributeRow relevanceRow;
+	private CTPRAttributeRow researchRow;
+	private CTPRAttributeRow lngRow;
+	
+	// Originality rows
+	private CTPRAttributeRow differenceRow;
+	private CTPRAttributeRow creativityRow;
+	private CTPRAttributeRow whyMeRow;
+	
+	// Reach rows
+	private CTPRAttributeRow audienceRow;
+	private CTPRAttributeRow qualityRow;
+	
+	// Engagement rows
+	private CTPRAttributeRow mediaRow;
+	private CTPRAttributeRow actionRow;
+	
+	private double styleScore;
+	private double contentScore;
+	private double originalityScore;
+	private double reachScore;
+	private double engagementScore;
+	private double globalScore;
+	
 	/******************************  ******************************/
 	
 	/**
@@ -35,6 +69,7 @@ public class MainGUI
 	 */
 	public MainGUI() {
 		mainFrame = new JFrame("CTPR Score Tracker"); {
+			
 			JPanel wrapper = new JPanel();
 			wrapper.setBorder(GUIComponentFactory.insideLineBorder);
 			wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS)); {
@@ -50,15 +85,15 @@ public class MainGUI
 					stylePanel.setLayout(new GridLayout(3, 1)); {
 						
 						// Structure
-						CTPRAttributeRow structureRow = new CTPRAttributeRow("Structure");
+						structureRow = new CTPRAttributeRow("Structure");
 						stylePanel.add(structureRow);
 						
 						// Flow of writing
-						CTPRAttributeRow writingFlowRow = new CTPRAttributeRow("Flow of writing");
+						writingFlowRow = new CTPRAttributeRow("Flow of writing");
 						stylePanel.add(writingFlowRow);
 						
 						// Language
-						CTPRAttributeRow languageRow = new CTPRAttributeRow("Language");
+						languageRow = new CTPRAttributeRow("Language");
 						stylePanel.add(languageRow);
 					}
 					inputPanel.add(stylePanel);
@@ -69,15 +104,15 @@ public class MainGUI
 					contentPanel.setLayout(new GridLayout(3, 1)); {
 						
 						// Relevance
-						CTPRAttributeRow relevanceRow = new CTPRAttributeRow("Relevance");
+						relevanceRow = new CTPRAttributeRow("Relevance");
 						contentPanel.add(relevanceRow);
 						
 						// Research
-						CTPRAttributeRow researchRow = new CTPRAttributeRow("Research");
+						researchRow = new CTPRAttributeRow("Research");
 						contentPanel.add(researchRow);
 						
 						// Lede and Nut-Graf
-						CTPRAttributeRow lngRow = new CTPRAttributeRow("Lede & Nut-Graf");
+						lngRow = new CTPRAttributeRow("Lede & Nut-Graf");
 						contentPanel.add(lngRow);
 					}
 					inputPanel.add(contentPanel);
@@ -88,15 +123,15 @@ public class MainGUI
 					originalityPanel.setLayout(new GridLayout(3, 1)); {
 						
 						// Making a difference
-						CTPRAttributeRow differenceRow = new CTPRAttributeRow("Making a difference");
+						differenceRow = new CTPRAttributeRow("Making a difference");
 						originalityPanel.add(differenceRow);
 						
 						// Creativity
-						CTPRAttributeRow creativityRow = new CTPRAttributeRow("Creativity");
+						creativityRow = new CTPRAttributeRow("Creativity");
 						originalityPanel.add(creativityRow);
 						
 						// Why me
-						CTPRAttributeRow whyMeRow = new CTPRAttributeRow("Why me?");
+						whyMeRow = new CTPRAttributeRow("Why me?");
 						originalityPanel.add(whyMeRow);
 					}
 					inputPanel.add(originalityPanel);
@@ -107,11 +142,11 @@ public class MainGUI
 					reachPanel.setLayout(new GridLayout(2, 1)); {
 						
 						// Target audience
-						CTPRAttributeRow audienceRow = new CTPRAttributeRow("Target Audience");
+						audienceRow = new CTPRAttributeRow("Target Audience");
 						reachPanel.add(audienceRow);
 						
 						// Quality of publication
-						CTPRAttributeRow qualityRow = new CTPRAttributeRow("Quality of Publication");
+						qualityRow = new CTPRAttributeRow("Quality of Publication");
 						reachPanel.add(qualityRow);
 					}
 					inputPanel.add(reachPanel);
@@ -122,16 +157,50 @@ public class MainGUI
 					engagementPanel.setLayout(new GridLayout(2, 1)); {
 						
 						// Use of media
-						CTPRAttributeRow mediaRow = new CTPRAttributeRow("Use of Media");
+						mediaRow = new CTPRAttributeRow("Use of Media");
 						engagementPanel.add(mediaRow);
 						
 						// Call for action
-						CTPRAttributeRow actionRow = new CTPRAttributeRow("Call for Action");
+						actionRow = new CTPRAttributeRow("Call for Action");
 						engagementPanel.add(actionRow);
 					}
 					inputPanel.add(engagementPanel);
 				}
 				wrapper.add(inputPanel);
+				
+				// Button Panel
+				JPanel buttonPanel = new JPanel();
+				buttonPanel.setLayout(new GridLayout(1, 1)); {
+					calculateButton = new JButton("Calculate Scores");
+					calculateButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							styleScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating())/3;
+							styleScoreDisplayField.setText(String.valueOf(styleScore));
+							
+							contentScore = (relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating())/3;
+							contentScoreDisplayField.setText(String.valueOf(contentScore));
+							
+							originalityScore = (differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating())/3;
+							originalityScoreDisplayField.setText(String.valueOf(originalityScore));
+							
+							reachScore = (audienceRow.getRating() + qualityRow.getRating())/2;
+							reachScoreDisplayField.setText(String.valueOf(reachScore));
+							
+							engagementScore = (mediaRow.getRating() + actionRow.getRating())/2;
+							engagementScoreDisplayField.setText(String.valueOf(engagementScore));
+							
+							globalScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating() +
+									relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating() +
+									differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating() +
+									audienceRow.getRating() + qualityRow.getRating() +
+									mediaRow.getRating() + actionRow.getRating())/13;
+							globalScoreDisplayField.setText(String.valueOf(globalScore));
+						}
+					});
+					buttonPanel.add(calculateButton);
+				}
+				wrapper.add(buttonPanel);
 				
 				// Results display panel
 				JPanel outputPanel = new JPanel();
@@ -145,7 +214,7 @@ public class MainGUI
 						JPanel styleOutputPanel = new JPanel();
 						styleOutputPanel.setLayout(new BoxLayout(styleOutputPanel, BoxLayout.X_AXIS)); {
 							styleOutputPanel.add(new JLabel("Style"));
-							styleScoreDisplayField = new JTextField("0");
+							styleScoreDisplayField = new JTextField("0.0");
 							styleScoreDisplayField.setEditable(false);
 							styleOutputPanel.add(styleScoreDisplayField);
 						}
@@ -155,7 +224,7 @@ public class MainGUI
 						JPanel contentOutputPanel = new JPanel();
 						contentOutputPanel.setLayout(new BoxLayout(contentOutputPanel, BoxLayout.X_AXIS)); {
 							contentOutputPanel.add(new JLabel("Content"));
-							contentScoreDisplayField = new JTextField("0");
+							contentScoreDisplayField = new JTextField("0.0");
 							contentScoreDisplayField.setEditable(false);
 							contentOutputPanel.add(contentScoreDisplayField);
 						}
@@ -165,7 +234,7 @@ public class MainGUI
 						JPanel originalityOutputPanel = new JPanel();
 						originalityOutputPanel.setLayout(new BoxLayout(originalityOutputPanel, BoxLayout.X_AXIS)); {
 							originalityOutputPanel.add(new JLabel("Originality"));
-							originalityScoreDisplayField = new JTextField("0");
+							originalityScoreDisplayField = new JTextField("0.0");
 							originalityScoreDisplayField.setEditable(false);
 							originalityOutputPanel.add(originalityScoreDisplayField);
 						}
@@ -175,7 +244,7 @@ public class MainGUI
 						JPanel reachOutputPanel = new JPanel();
 						reachOutputPanel.setLayout(new BoxLayout(reachOutputPanel, BoxLayout.X_AXIS)); {
 							reachOutputPanel.add(new JLabel("Reach"));
-							reachScoreDisplayField = new JTextField("0");
+							reachScoreDisplayField = new JTextField("0.0");
 							reachScoreDisplayField.setEditable(false);
 							reachOutputPanel.add(reachScoreDisplayField);
 						}
@@ -185,7 +254,7 @@ public class MainGUI
 						JPanel engagementOutputPanel = new JPanel();
 						engagementOutputPanel.setLayout(new BoxLayout(engagementOutputPanel, BoxLayout.X_AXIS)); {
 							engagementOutputPanel.add(new JLabel("Engagement"));
-							engagementScoreDisplayField = new JTextField("0");
+							engagementScoreDisplayField = new JTextField("0.0");
 							engagementScoreDisplayField.setEditable(false);
 							engagementOutputPanel.add(engagementScoreDisplayField);
 						}
