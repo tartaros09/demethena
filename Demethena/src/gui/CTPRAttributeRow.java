@@ -26,6 +26,8 @@ public class CTPRAttributeRow extends JPanel
 	private JRadioButton rating4;
 	private JRadioButton rating5;
 	
+	private ButtonGroup ratingGroup;
+	
 	private double rating = 0;
 	
 	public ActionListener updateRating = new ActionListener() {
@@ -82,13 +84,23 @@ public class CTPRAttributeRow extends JPanel
 			 }
 			 this.add(radioPanel);
 			 
-			 ButtonGroup group = new ButtonGroup();
-			 group.add(rating1);
-			 group.add(rating2);
-			 group.add(rating3);
-			 group.add(rating4);
-			 group.add(rating5);
+			 ratingGroup = new ButtonGroup();
+			 ratingGroup.add(rating1);
+			 ratingGroup.add(rating2);
+			 ratingGroup.add(rating3);
+			 ratingGroup.add(rating4);
+			 ratingGroup.add(rating5);
 		 }
+	}
+	
+	/******************************  ******************************/
+	
+	/**
+	 * @description clears any selection of buttons and resets the
+	 * row to a clean state.
+	 */
+	public void clearRow() {
+		ratingGroup.clearSelection();
 	}
 	
 	/******************************  ******************************/

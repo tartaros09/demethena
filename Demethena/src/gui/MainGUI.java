@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -14,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import util.FileIO;
 import util.GUIComponentFactory;
 
 /**
@@ -40,6 +42,7 @@ public class MainGUI
 	private JButton saveResultsButton;
 	
 	// Menu items
+	private JMenuItem outputFileMenu;
 	private JMenuItem quitMenu;
 	private JMenuItem aboutMenu;
 	
@@ -72,6 +75,8 @@ public class MainGUI
 	private double reachScore;
 	private double engagementScore;
 	private double globalScore;
+	
+	private String outputFilepath = null;
 	
 	/******************************  ******************************/
 	
@@ -290,6 +295,45 @@ public class MainGUI
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						
+						// Compose CSV string, write to file.
+						String content = nameField.getText() + ",";
+						content += urlField.getText() + ",";
+						content += String.valueOf(styleScore) + ",";
+						content += String.valueOf(contentScore) + ",";
+						content += String.valueOf(originalityScore) + ",";
+						content += String.valueOf(reachScore) + ",";
+						content += String.valueOf(engagementScore) + ",";
+						content += String.valueOf(globalScore) + "\n";
+						FileIO.appendToFile(outputFilepath, content);
+						
+						// Refresh form
+						nameField.setText("");
+						urlField.setText("");
+						
+						// Clear Style rows
+						structureRow.clearRow();
+						writingFlowRow.clearRow();
+						languageRow.clearRow();
+						
+						// Clear Content rows
+						relevanceRow.clearRow();
+						researchRow.clearRow();
+						lngRow.clearRow();
+						
+						// Clear Originality rows
+						differenceRow.clearRow();
+						creativityRow.clearRow();
+						whyMeRow.clearRow();
+						
+						// Clear Reach rows
+						audienceRow.clearRow();
+						qualityRow.clearRow();
+						
+						// Clear Engagement rows
+						mediaRow.clearRow();
+						actionRow.clearRow();
+						
+						saveResultsButton.setEnabled(false);
 					}
 				});
 				buttonPanel.add(saveResultsButton);
@@ -394,6 +438,19 @@ public class MainGUI
 			
 			// File menu
 			JMenu fileMenu = new JMenu("File"); {
+				
+				// Preferences menu item
+				outputFileMenu = new JMenuItem("Select output file...");
+				outputFileMenu.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JFileChooser jfc = new JFileChooser();
+						int result = jfc.showOpenDialog(mainFrame);
+						if(result == JFileChooser.APPROVE_OPTION)
+							outputFilepath = jfc.getSelectedFile().getAbsolutePath();
+					}
+				});
+				fileMenu.add(outputFileMenu);
 				
 				// Quit menu item
 				quitMenu = new JMenuItem("Quit");
