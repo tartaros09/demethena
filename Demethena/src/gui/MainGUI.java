@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -32,8 +33,15 @@ public class MainGUI
 	private JTextField engagementScoreDisplayField;
 	private JTextField globalScoreDisplayField;
 	
+	private JTextField nameField;
+	private JTextField urlField;
+	
 	private JButton calculateButton;
 	private JButton saveResultsButton;
+	
+	// Menu items
+	private JMenuItem quitMenu;
+	private JMenuItem aboutMenu;
 	
 	// Style rows
 	private CTPRAttributeRow structureRow;
@@ -75,19 +83,25 @@ public class MainGUI
 			
 			JPanel wrapper = new JPanel();
 			wrapper.setBorder(GUIComponentFactory.insideLineBorder);
-			wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS)); {
+			wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.X_AXIS)); {
 				
 				// Scoring panel
 				JPanel inputPanel = buildInputPanel();
 				wrapper.add(inputPanel);
 				
-				// Button Panel
-				JPanel buttonPanel = buildButtonPanel();
-				wrapper.add(buttonPanel);
-				
-				// Results display panel
-				JPanel outputPanel = buildOutputPanel();
-				wrapper.add(outputPanel);
+				JPanel rightSidePanel = new JPanel();
+				rightSidePanel.setBorder(GUIComponentFactory.emptyBorder);
+				rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.Y_AXIS)); {
+
+					// Button Panel
+					JPanel buttonPanel = buildButtonPanel();
+					rightSidePanel.add(buttonPanel);
+					
+					// Results display panel
+					JPanel outputPanel = buildOutputPanel();
+					rightSidePanel.add(outputPanel);
+				}
+				wrapper.add(rightSidePanel);
 			}
 			mainFrame.add(wrapper);
 		}
@@ -210,44 +224,77 @@ public class MainGUI
 	 */
 	private JPanel buildButtonPanel() {
 		JPanel ans = new JPanel();
-		ans.setLayout(new GridLayout(1, 2)); {
-			calculateButton = new JButton("Calculate Scores");
-			calculateButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					styleScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating())/3;
-					styleScoreDisplayField.setText(String.valueOf(styleScore));
-					
-					contentScore = (relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating())/3;
-					contentScoreDisplayField.setText(String.valueOf(contentScore));
-					
-					originalityScore = (differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating())/3;
-					originalityScoreDisplayField.setText(String.valueOf(originalityScore));
-					
-					reachScore = (audienceRow.getRating() + qualityRow.getRating())/2;
-					reachScoreDisplayField.setText(String.valueOf(reachScore));
-					
-					engagementScore = (mediaRow.getRating() + actionRow.getRating())/2;
-					engagementScoreDisplayField.setText(String.valueOf(engagementScore));
-					
-					globalScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating() +
-							relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating() +
-							differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating() +
-							audienceRow.getRating() + qualityRow.getRating() +
-							mediaRow.getRating() + actionRow.getRating())/13;
-					globalScoreDisplayField.setText(String.valueOf(globalScore));
-				}
-			});
-			ans.add(calculateButton);
+		ans.setLayout(new BoxLayout(ans, BoxLayout.Y_AXIS)); {
 			
-			saveResultsButton = new JButton("Save Results");
-			saveResultsButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					
+			// Textfields
+			JPanel textFieldPanel = new JPanel();
+			textFieldPanel.setLayout(new GridLayout(2, 1)); {
+				
+				// Name field
+				JPanel namePanel = new JPanel();
+				namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS)); {
+					namePanel.add(new JLabel("Name"));
+					nameField = new JTextField();
+					namePanel.add(nameField);
 				}
-			});
-			ans.add(saveResultsButton);
+				textFieldPanel.add(namePanel);
+				
+				// URL field
+				JPanel urlPanel = new JPanel();
+				urlPanel.setLayout(new BoxLayout(urlPanel, BoxLayout.X_AXIS)); {
+					urlPanel.add(new JLabel("URL"));
+					urlField = new JTextField();
+					urlPanel.add(urlField);
+				}
+				textFieldPanel.add(urlPanel);
+			}
+			ans.add(textFieldPanel);
+			
+			// Buttons
+			JPanel buttonPanel = new JPanel();
+			buttonPanel.setLayout(new GridLayout(1, 2)); {
+				calculateButton = new JButton("Calculate Scores");
+				calculateButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						styleScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating())/3;
+						styleScoreDisplayField.setText(String.valueOf(styleScore));
+						
+						contentScore = (relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating())/3;
+						contentScoreDisplayField.setText(String.valueOf(contentScore));
+						
+						originalityScore = (differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating())/3;
+						originalityScoreDisplayField.setText(String.valueOf(originalityScore));
+						
+						reachScore = (audienceRow.getRating() + qualityRow.getRating())/2;
+						reachScoreDisplayField.setText(String.valueOf(reachScore));
+						
+						engagementScore = (mediaRow.getRating() + actionRow.getRating())/2;
+						engagementScoreDisplayField.setText(String.valueOf(engagementScore));
+						
+						globalScore = (structureRow.getRating() + writingFlowRow.getRating() + languageRow.getRating() +
+								relevanceRow.getRating() + researchRow.getRating() + lngRow.getRating() +
+								differenceRow.getRating() + creativityRow.getRating() + whyMeRow.getRating() +
+								audienceRow.getRating() + qualityRow.getRating() +
+								mediaRow.getRating() + actionRow.getRating())/13;
+						globalScoreDisplayField.setText(String.valueOf(globalScore));
+						
+						saveResultsButton.setEnabled(true);
+					}
+				});
+				buttonPanel.add(calculateButton);
+				
+				saveResultsButton = new JButton("Save Results");
+				saveResultsButton.setEnabled(false);
+				saveResultsButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
+				buttonPanel.add(saveResultsButton);
+			}
+			ans.add(buttonPanel);
 		}
 		return ans;
 	}
@@ -348,6 +395,16 @@ public class MainGUI
 			// File menu
 			JMenu fileMenu = new JMenu("File"); {
 				
+				// Quit menu item
+				quitMenu = new JMenuItem("Quit");
+				quitMenu.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						mainFrame.setVisible(false);
+						mainFrame.dispose();
+					}
+				});
+				fileMenu.add(quitMenu);
 			}
 			ans.add(fileMenu);
 			
