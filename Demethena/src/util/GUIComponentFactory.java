@@ -8,6 +8,7 @@ import javax.swing.border.Border;
 public class GUIComponentFactory
 {
 	public static Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+	public static Border largeTopSpacerBorder = BorderFactory.createEmptyBorder(15, 2, 2, 2);
 	public static Border insideLineBorder = BorderFactory.createCompoundBorder(
 			emptyBorder,
 			BorderFactory.createLineBorder(Color.BLACK, 2));

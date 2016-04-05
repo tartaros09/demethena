@@ -411,6 +411,16 @@ public class MainGUI
 			// Help menu
 			JMenu helpMenu = new JMenu("Help"); {
 				
+				// About menu item
+				aboutMenu = new JMenuItem("About...");
+				aboutMenu.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						@SuppressWarnings("unused")
+						AboutGUI aboutDialog = new AboutGUI(mainFrame);
+					}
+				});
+				helpMenu.add(aboutMenu);
 			}
 			ans.add(helpMenu);
 		}
