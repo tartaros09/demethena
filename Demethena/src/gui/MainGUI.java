@@ -116,6 +116,9 @@ public class MainGUI
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
+		
+		// Enforce output file selection on startup
+		outputFileMenu.doClick();
 	}
 	
 	/******************************  ******************************/
