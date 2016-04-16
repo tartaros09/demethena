@@ -33,4 +33,9 @@ public class GUIComponentFactory
 	public static Border borderForEngagement = BorderFactory.createCompoundBorder(
 			emptyBorder,
 			BorderFactory.createLineBorder(new Color(112, 48, 160), 2));
+	
+	public static Border borderForComments = BorderFactory.createCompoundBorder(
+			emptyBorder,
+			BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2),
+					"Comments"));
 }

@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import util.FileIO;
@@ -27,6 +28,8 @@ import util.GUIComponentFactory;
 public class MainGUI
 {
 	public JFrame mainFrame;
+	
+	private JTextArea commentsArea;
 	
 	private JTextField styleScoreDisplayField;
 	private JTextField contentScoreDisplayField;
@@ -219,6 +222,15 @@ public class MainGUI
 				engagementPanel.add(actionRow);
 			}
 			ans.add(engagementPanel);
+			
+			// Comments section
+			JPanel commentsPanel = new JPanel();
+			commentsPanel.setBorder(GUIComponentFactory.borderForComments);
+			commentsPanel.setLayout(new GridLayout(1, 1)); {
+				commentsArea = new JTextArea(5, 0);
+				commentsPanel.add(commentsArea);
+			}
+			ans.add(commentsPanel);
 		}
 		return ans;
 	}
@@ -299,14 +311,15 @@ public class MainGUI
 					public void actionPerformed(ActionEvent e) {
 						
 						// Compose CSV string, write to file.
-						String content = nameField.getText() + ",";
-						content += urlField.getText() + ",";
-						content += String.valueOf(styleScore) + ",";
-						content += String.valueOf(contentScore) + ",";
-						content += String.valueOf(originalityScore) + ",";
-						content += String.valueOf(reachScore) + ",";
-						content += String.valueOf(engagementScore) + ",";
-						content += String.valueOf(globalScore) + "\n";
+						String content = nameField.getText() + "\t";
+						content += urlField.getText() + "\t";
+						content += String.valueOf(styleScore) + "\t";
+						content += String.valueOf(contentScore) + "\t";
+						content += String.valueOf(originalityScore) + "\t";
+						content += String.valueOf(reachScore) + "\t";
+						content += String.valueOf(engagementScore) + "\t";
+						content += String.valueOf(globalScore) + "\t";
+						content += commentsArea.getText() + "\n";
 						FileIO.appendToFile(outputFilepath, content);
 						
 						// Refresh form
@@ -335,6 +348,8 @@ public class MainGUI
 						// Clear Engagement rows
 						mediaRow.clearRow();
 						actionRow.clearRow();
+						
+						commentsArea.setText("");
 						
 						saveResultsButton.setEnabled(false);
 					}
